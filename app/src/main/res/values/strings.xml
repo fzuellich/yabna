@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">YABNA</string>
+    <string name="pref_channel_category_title">Channels</string>
 </resources>
