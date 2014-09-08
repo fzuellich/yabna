@@ -14,6 +14,9 @@ import java.util.Map;
 
 /**
  * Fetch a list of available channels.
+ *
+ * TODO: Add caching mechanism
+ * TODO: Add dialog to notify user
  */
 public class ChannelPreferencesTask extends AsyncTask<URL, Integer, Map<String, String>> {
 
