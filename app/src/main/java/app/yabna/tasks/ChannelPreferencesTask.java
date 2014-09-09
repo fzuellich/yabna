@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import app.yabna.utils.AsyncTaskFinishedListener;
+
 /**
  * Fetch a list of available channels.
  *
@@ -19,6 +21,16 @@ import java.util.Map;
  * TODO: Add dialog to notify user
  */
 public class ChannelPreferencesTask extends AsyncTask<URL, Integer, Map<String, String>> {
+
+    private final AsyncTaskFinishedListener finishedListener;
+
+    /**
+     * Create a new async task to load all channels and call the listener when finished.
+     * @param finishedListener listener will be called if finished. receives a Map<String, String>>.
+     */
+    public ChannelPreferencesTask(AsyncTaskFinishedListener finishedListener) {
+        this.finishedListener = finishedListener;
+    }
 
 
     /**
@@ -58,5 +70,11 @@ public class ChannelPreferencesTask extends AsyncTask<URL, Integer, Map<String, 
         }
 
         return new HashMap<String, String>();
+    }
+
+    @Override
+    protected void onPostExecute(Map<String, String> channels) {
+        super.onPostExecute(channels);
+        finishedListener.taskFinished(channels);
     }
 }

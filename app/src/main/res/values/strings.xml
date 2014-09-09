@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">YABNA</string>
     <string name="channel_csv_file_url">http://deploy.zuellich.de/yabna/channels.csv</string>
 
@@ -6,4 +8,8 @@
     <string name="pref_subscribed_channels_file">app.yabna.subscribed_channels</string>
     <string name="pref_subscribed_channels_key">subscribed_channels</string>
     <string name="pref_channel_category_title">Channels</string>
+    <string name="title_activity_channel_overview">Overview</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

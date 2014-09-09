@@ -18,11 +18,9 @@ import java.util.concurrent.ExecutionException;
 
 import app.yabna.R;
 import app.yabna.tasks.ChannelPreferencesTask;
+import app.yabna.utils.AsyncTaskFinishedListener;
 
-/**
- * TODO: check why color of checkbox text is ugly as hell
- */
-public class SettingsFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragment implements AsyncTaskFinishedListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,39 +28,37 @@ public class SettingsFragment extends PreferenceFragment {
         // add base preference
         addPreferencesFromResource(R.xml.preferences);
 
+        try {
+            // load all channel preferences from web file
+            ChannelPreferencesTask task = new ChannelPreferencesTask(this);
+            task.execute(new URL(getString(R.string.channel_csv_file_url)));
+        } catch(MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void taskFinished(Object result) {
         // load subscribed channels so we can set the preferences accordingly below
         SharedPreferences prefs = getActivity().getApplicationContext()
                 .getSharedPreferences(getString(R.string.pref_subscribed_channels_file), Context.MODE_PRIVATE);
         Set<String> subscribedChannels = prefs.getStringSet(getString(R.string.pref_subscribed_channels_key), new HashSet<String>());
 
-        try {
-            // load all channel preferences from web file
-            ChannelPreferencesTask task = new ChannelPreferencesTask();
-            task.execute(new URL(getString(R.string.channel_csv_file_url)));
-            try {
-                PreferenceCategory channelCategory = (PreferenceCategory) findPreference("pref_channel");
+            PreferenceCategory channelCategory = (PreferenceCategory) findPreference("pref_channel");
 
-                // process map
-                CheckBoxChangeListener changeListener = new CheckBoxChangeListener();
-                Map<String, String> channelMap = task.get(); // todo make async
-                for(String key : channelMap.keySet()) {
-                    CheckBoxPreference pref =  new CheckBoxPreference(getActivity().getApplicationContext());
-                    pref.setOnPreferenceChangeListener(changeListener);
-                    pref.setTitle(key);
-                    pref.setKey(channelMap.get(key));
-                    pref.setChecked(subscribedChannels.contains(channelMap.get(key)));
+            // process map
+            CheckBoxChangeListener changeListener = new CheckBoxChangeListener();
+            Map<String, String> channelMap = (Map<String, String>) result;
+            for(String key : channelMap.keySet()) {
+                CheckBoxPreference pref =  new CheckBoxPreference(getActivity().getApplicationContext());
+                pref.setOnPreferenceChangeListener(changeListener);
+                pref.setTitle(key);
+                pref.setKey(channelMap.get(key));
+                pref.setChecked(subscribedChannels.contains(channelMap.get(key)));
 
-                    // add preference to category
-                    channelCategory.addPreference(pref);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+                // add preference to category
+                channelCategory.addPreference(pref);
             }
-        } catch(MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     private class CheckBoxChangeListener implements Preference.OnPreferenceChangeListener {
