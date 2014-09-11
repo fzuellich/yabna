@@ -31,6 +31,12 @@ public class ParseFeedTask extends AsyncTask<URL, Integer, FeedDAO> {
         return new FeedParser(is).parseFeed();
     }
 
+    @Override
+    protected void onPostExecute(FeedDAO feedDAO) {
+        super.onPostExecute(feedDAO);
+        listener.taskFinished(feedDAO);
+    }
+
     /**
      * We could just create a more abstract function and use it in ChannelPreferenceTask and this one,
      * but what about performance?

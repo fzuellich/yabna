@@ -50,4 +50,9 @@ public class FeedItemDAO {
         result = 31 * result + (link != null ? link.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return getTitle();
+    }
 }
