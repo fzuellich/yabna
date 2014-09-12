@@ -1,4 +1,4 @@
-package app.yabna;
+package app.yabna.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
