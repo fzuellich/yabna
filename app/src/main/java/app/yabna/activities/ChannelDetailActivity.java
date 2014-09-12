@@ -47,7 +47,7 @@ public class ChannelDetailActivity extends ListActivity implements AsyncTaskFini
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.channel_overview, menu);
+        inflater.inflate(R.menu.main_menu, menu);
 
         return true;
     }
