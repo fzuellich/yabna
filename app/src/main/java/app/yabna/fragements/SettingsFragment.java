@@ -11,7 +11,10 @@ import android.preference.PreferenceFragment;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channel;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -19,8 +22,22 @@ import java.util.concurrent.ExecutionException;
 import app.yabna.R;
 import app.yabna.tasks.ChannelPreferencesTask;
 import app.yabna.utils.AsyncTaskFinishedListener;
+import app.yabna.utils.ChannelDAO;
+import app.yabna.utils.PreferenceHelper;
 
+/**
+ * Fragment implementing main settings behaviour to subscribed/unsubscribe from channels.
+ */
 public class SettingsFragment extends PreferenceFragment implements AsyncTaskFinishedListener {
+
+    private static final String CHANNEL_DELEMITER = "^";
+
+    // holds all subscribed channels. use string because its easier to work with preferences this way.
+    private List<String> subscribedChannels = new ArrayList<String>();
+
+    // list of all available channels. will be set by the callback function below.
+    private List<ChannelDAO> availableChannels;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +45,29 @@ public class SettingsFragment extends PreferenceFragment implements AsyncTaskFin
         // add base preference
         addPreferencesFromResource(R.xml.preferences);
 
+        // load a fresh set of available channels
+        loadChannelList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadChannelList();
+        makePreferenceUI();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // save the changes
+        saveSubscribedChannels();
+    }
+
+    /**
+     * Fetch a fresh list of available channels. Asynchronous.
+     */
+    private void loadChannelList() {
         try {
             // load all channel preferences from web file
             ChannelPreferencesTask task = new ChannelPreferencesTask(this);
@@ -37,58 +77,80 @@ public class SettingsFragment extends PreferenceFragment implements AsyncTaskFin
         }
     }
 
+    /**
+     * Load all subscribed channels from the shared preferences.
+     */
+    private void loadSubscribedChannels() {
+       subscribedChannels = PreferenceHelper
+               .getSubscribedChannelsAsStrings(getActivity().getApplicationContext());
+    }
+
+    /**
+     * Save all subscribed channels to the shared preferences.
+     */
+    private void saveSubscribedChannels() {
+        if(subscribedChannels.size() == 0) return;
+        System.out.println("Save channels...");
+
+        PreferenceHelper
+                .saveSubscribedChannelsAsString(subscribedChannels, getActivity().getApplicationContext());
+    }
+
+    /**
+     * Creates all checkbox preferences for the channels.
+     */
+    private void makePreferenceUI() {
+        // fetch category to add new preferences to it
+        PreferenceCategory channelCategory = (PreferenceCategory) findPreference("pref_channel");
+
+        // create a listener to handle changes to the preferences
+        CheckBoxChangeListener changeListener = new CheckBoxChangeListener();
+
+        // process available channels into preferences
+        for(ChannelDAO channel : availableChannels) {
+            CheckBoxPreference pref =  new CheckBoxPreference(getActivity().getApplicationContext());
+            pref.setOnPreferenceChangeListener(changeListener);
+            pref.setTitle(channel.getTitle());
+            pref.setKey(channel.getPreferenceString());
+            pref.setChecked(subscribedChannels.contains(channel.getPreferenceString()));
+
+            // add preference to category
+            channelCategory.addPreference(pref);
+        }
+    }
+
     @Override
     public void taskFinished(Object result) {
-        // load subscribed channels so we can set the preferences accordingly below
-        SharedPreferences prefs = getActivity().getApplicationContext()
-                .getSharedPreferences(getString(R.string.pref_subscribed_channels_file), Context.MODE_PRIVATE);
-        Set<String> subscribedChannels = prefs.getStringSet(getString(R.string.pref_subscribed_channels_key), new HashSet<String>());
+        // set all available channels
+        availableChannels = (List<ChannelDAO>) result;
 
-            PreferenceCategory channelCategory = (PreferenceCategory) findPreference("pref_channel");
+        // first load all subscribed channels so we can check already subscribed prefs in the ui
+        loadSubscribedChannels();
 
-            // process map
-            CheckBoxChangeListener changeListener = new CheckBoxChangeListener();
-            Map<String, String> channelMap = (Map<String, String>) result;
-            for(String key : channelMap.keySet()) {
-                CheckBoxPreference pref =  new CheckBoxPreference(getActivity().getApplicationContext());
-                pref.setOnPreferenceChangeListener(changeListener);
-                pref.setTitle(key);
-                pref.setKey(channelMap.get(key));
-                pref.setChecked(subscribedChannels.contains(channelMap.get(key)));
-
-                // add preference to category
-                channelCategory.addPreference(pref);
-            }
+        // now load the ui
+        makePreferenceUI();
     }
 
     private class CheckBoxChangeListener implements Preference.OnPreferenceChangeListener {
 
-        private final SharedPreferences prefs;
-
         public CheckBoxChangeListener() {
-            prefs = getActivity().getApplicationContext()
-                    .getSharedPreferences(getString(R.string.pref_subscribed_channels_file), Context.MODE_PRIVATE);
         }
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
-            Set<String> subscribedChannels = prefs.getStringSet(getString(R.string.pref_subscribed_channels_key), new HashSet<String>());
+            String key = preference.getKey();
+            CheckBoxPreference checkbox = (CheckBoxPreference) preference;
 
-            boolean isSubscribed = (Boolean) o;
-            // add channel if subscribed and not in set
-            if(isSubscribed && !subscribedChannels.contains(preference.getKey())) {
-                subscribedChannels.add(preference.getKey());
-            } else if(!isSubscribed && subscribedChannels.contains(preference.getKey())) {
-                // remove channel if not subscribed but still in set
-                subscribedChannels.remove(preference.getKey());
+            // add channel because not already present
+            if(checkbox.isChecked() && !subscribedChannels.contains(key)) {
+                System.out.println("Subscribing to " + key);
+                subscribedChannels.add(key);
+            } else if(!checkbox.isChecked() && subscribedChannels.contains(key)) {
+                // remove channel
+                System.out.println("Unsubscribing from " + key);
+                subscribedChannels.remove(key);
             }
 
-            // save the changes
-            SharedPreferences.Editor prefEditor = prefs.edit();
-            prefEditor.putStringSet(getString(R.string.pref_subscribed_channels_key), subscribedChannels);
-            prefEditor.commit();
-
-            // we want to update the preference as well
             return true;
         }
     }
