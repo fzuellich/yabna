@@ -14,7 +14,7 @@ import app.yabna.R;
  */
 public class PreferenceHelper {
 
-    private static final String CHANNEL_DELEMITER = "^";
+    private static final String CHANNEL_DELEMITER = "µ";
 
     /**
      * Read all subscribed channels from the shared properties and return them as string with the
@@ -75,7 +75,6 @@ public class PreferenceHelper {
     public static void saveSubscribedChannelsAsString(List<String> subscribedChannels, Context context) {
         StringBuilder preferenceString = new StringBuilder();
         for(String channel : subscribedChannels) {
-            System.out.println("Processing subscribed channel: " + channel);
             preferenceString.append(channel + CHANNEL_DELEMITER);
         }
 

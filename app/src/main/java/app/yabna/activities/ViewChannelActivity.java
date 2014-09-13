@@ -23,7 +23,7 @@ import app.yabna.utils.FeedItemDAO;
 /**
  * List all news items of a channel
  */
-public class ChannelDetailActivity extends ListActivity implements AsyncTaskFinishedListener {
+public class ViewChannelActivity extends ListActivity implements AsyncTaskFinishedListener {
 
     private ArrayAdapter<FeedItemDAO> myAdapter;
 
@@ -31,8 +31,10 @@ public class ChannelDetailActivity extends ListActivity implements AsyncTaskFini
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            String feedUrl = getIntent().getStringExtra(getString(R.string.intent_channelDetailUrlExtra));
+
             // execute task. check callback function below.
-            new ParseFeedTask(this).execute(new URL("http://todejutsu.org/rss.xml"));
+            new ParseFeedTask(this).execute(new URL(feedUrl));
 
             // create adapter and use base list item
             myAdapter = new ArrayAdapter<FeedItemDAO>(getApplicationContext(), android.R.layout.simple_list_item_1);

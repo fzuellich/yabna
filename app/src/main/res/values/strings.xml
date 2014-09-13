@@ -11,5 +11,6 @@
     <string name="title_activity_channel_overview">Overview</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="intent_channelDetailUrlExtra">channel_detail_url</string>
 
 </resources>
