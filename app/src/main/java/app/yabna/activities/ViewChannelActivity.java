@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,10 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // display < | Title ...
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         try {
             String feedUrl = getIntent().getStringExtra(getString(R.string.intent_channelDetailUrlExtra));
 
@@ -47,19 +52,14 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
             default:
                 return false;
         }
