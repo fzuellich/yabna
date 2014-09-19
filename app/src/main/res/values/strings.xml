@@ -12,5 +12,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="intent_channelDetailUrlExtra">channel_detail_url</string>
+    <string name="dialog_title_fetching_data">Fetching data...</string>
+    <string name="dialog_msg_fetching_data">Downloading...</string>
 
 </resources>

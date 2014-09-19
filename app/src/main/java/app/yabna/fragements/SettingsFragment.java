@@ -1,6 +1,7 @@
 package app.yabna.fragements;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,12 +32,20 @@ import app.yabna.utils.PreferenceHelper;
  */
 public class SettingsFragment extends PreferenceFragment implements AsyncTaskFinishedListener {
 
+    private ProgressDialog progressDialog;
+
     // our list of checkbox preferences
     private List<CheckBoxPreference> preferences = new ArrayList<CheckBoxPreference>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // create a progress dialog
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(getString(R.string.dialog_title_fetching_data));
+        progressDialog.setMessage(getString(R.string.dialog_msg_fetching_data));
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         // add base preference
         addPreferencesFromResource(R.xml.preferences);
@@ -45,6 +54,8 @@ public class SettingsFragment extends PreferenceFragment implements AsyncTaskFin
     @Override
     public void onResume() {
         super.onResume();
+
+        progressDialog.show();
 
         try {
             // load all channel preferences from web file
@@ -84,5 +95,8 @@ public class SettingsFragment extends PreferenceFragment implements AsyncTaskFin
             category.addPreference(pref);
             preferences.add(pref);
         }
+
+        // dismiss dialog
+        progressDialog.dismiss();
     }
 }

@@ -1,6 +1,7 @@
 package app.yabna.activities;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import app.yabna.utils.FeedItemDAO;
  */
 public class ViewChannelActivity extends ListActivity implements AsyncTaskFinishedListener {
 
+    private ProgressDialog progressDialog;
+
     private ArrayAdapter<FeedItemDAO> myAdapter;
 
     @Override
@@ -38,6 +41,13 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
         try {
             String feedUrl = getIntent().getStringExtra(getString(R.string.intent_channelDetailUrlExtra));
 
+            // create a progress dialog
+            progressDialog = new ProgressDialog(ViewChannelActivity.this);
+            progressDialog.setTitle(getString(R.string.dialog_title_fetching_data));
+            progressDialog.setMessage(getString(R.string.dialog_msg_fetching_data));
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+
             // execute task. check callback function below.
             new ParseFeedTask(this).execute(new URL(feedUrl));
 
@@ -49,6 +59,12 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        progressDialog.show();
     }
 
     @Override
@@ -72,6 +88,9 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
 
         // fill adapter
         myAdapter.addAll(feed.getItems());
+
+        // dismiss dialog
+        progressDialog.dismiss();
     }
 
     @Override
