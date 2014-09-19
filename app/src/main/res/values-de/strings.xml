@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">YABNA</string>
-    <string name="channel_csv_file_url">http://deploy.zuellich.de/yabna/channels.csv</string>
 
     <!-- preference related strings -->
     <string name="pref_channel_category_title">Kanäle</string>

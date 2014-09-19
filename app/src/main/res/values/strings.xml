@@ -2,17 +2,16 @@
 <resources>
 
     <string name="app_name">YABNA</string>
-    <string name="channel_csv_file_url">http://deploy.zuellich.de/yabna/channels.csv</string>
-
-    <!-- preference related strings -->
-    <string name="pref_subscribed_channels_file">app.yabna.subscribed_channels</string>
-    <string name="pref_subscribed_channels_key">subscribed_channels</string>
-    <string name="pref_channel_category_title">Channels</string>
     <string name="title_activity_channel_overview">Overview</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="intent_channelDetailUrlExtra">channel_detail_url</string>
     <string name="dialog_title_fetching_data">Fetching data...</string>
     <string name="dialog_msg_fetching_data">Downloading...</string>
+    <string name="pref_channel_category_title">Channels</string>
+
+    <!-- preference related strings -->
+    <string translatable="false" name="channel_csv_file_url">http://deploy.zuellich.de/yabna/channels.csv</string>
+    <string translatable="false" name="pref_subscribed_channels_file">app.yabna.subscribed_channels</string>
+    <string translatable="false" name="pref_subscribed_channels_key">subscribed_channels</string>
+    <string translatable="false" name="intent_channelDetailUrlExtra">channel_detail_url</string>
 
 </resources>
