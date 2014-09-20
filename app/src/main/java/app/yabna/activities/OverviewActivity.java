@@ -1,7 +1,9 @@
 package app.yabna.activities;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +25,14 @@ public class OverviewActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("Resuming...");
+
+        // check if first start ...
+        if(isFirstStart()) {
+            startActivity(new Intent(OverviewActivity.this, SetupActivity.class));
+            finish();
+        }
+
+        // not first start so load subscribed channels
         loadChannels();
     }
 
@@ -39,6 +48,17 @@ public class OverviewActivity extends ListActivity {
 
         // set views' adapter
         setListAdapter(subscribedChannelAdapter);
+    }
+
+    private boolean isFirstStart() {
+        boolean result = true;
+
+        // load preferences and get to know if first start. return true if not found.
+        SharedPreferences appPreferences = getApplicationContext()
+                .getSharedPreferences(getString(R.string.app_preferences), Context.MODE_PRIVATE);
+        result = appPreferences.getBoolean(getString(R.string.app_preferences_first_start), true);
+
+        return result;
     }
 
     @Override

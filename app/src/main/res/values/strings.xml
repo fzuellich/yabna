@@ -7,11 +7,16 @@
     <string name="dialog_title_fetching_data">Fetching data...</string>
     <string name="dialog_msg_fetching_data">Downloading...</string>
     <string name="pref_channel_category_title">Channels</string>
+    <string name="ready">Ready</string>
+    <string name="title_activity_setup">SetupActivity</string>
 
     <!-- preference related strings -->
-    <string translatable="false" name="channel_csv_file_url">http://deploy.zuellich.de/yabna/channels.csv</string>
-    <string translatable="false" name="pref_subscribed_channels_file">app.yabna.subscribed_channels</string>
-    <string translatable="false" name="pref_subscribed_channels_key">subscribed_channels</string>
-    <string translatable="false" name="intent_channelDetailUrlExtra">channel_detail_url</string>
+    <string name="channel_csv_file_url" translatable="false">http://deploy.zuellich.de/yabna/channels.csv</string>
+    <string name="pref_subscribed_channels_file" translatable="false">app.yabna.subscribed_channels</string>
+    <string name="pref_subscribed_channels_key" translatable="false">subscribed_channels</string>
+    <string name="intent_channelDetailUrlExtra" translatable="false">channel_detail_url</string>
+
+    <string name="app_preferences" translatable="false">app.yabna.preferences.app</string>
+    <string name="app_preferences_first_start" translatable="false">first_start</string>
 
 </resources>
