@@ -8,7 +8,7 @@
     <string name="dialog_msg_fetching_data">Downloading...</string>
     <string name="pref_channel_category_title">Channels</string>
     <string name="ready">Ready</string>
-    <string name="title_activity_setup">SetupActivity</string>
+    <string name="title_activity_setup">Setup</string>
 
     <!-- preference related strings -->
     <string name="channel_csv_file_url" translatable="false">http://deploy.zuellich.de/yabna/channels.csv</string>
@@ -18,5 +18,6 @@
 
     <string name="app_preferences" translatable="false">app.yabna.preferences.app</string>
     <string name="app_preferences_first_start" translatable="false">first_start</string>
+    <string name="action_accept">Accept</string>
 
 </resources>

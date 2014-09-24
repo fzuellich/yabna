@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="app.yabna.activities.OverviewActivity">
+    <item android:id="@+id/action_accept"
+        android:title="@string/action_accept"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_accept"
+        android:onClick="setupReady"
+        android:showAsAction="always" />
+</menu>

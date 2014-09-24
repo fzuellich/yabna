@@ -11,5 +11,6 @@
     <string name="dialog_msg_fetching_data">Herunterladen ...</string>
     <string name="ready">Fertig</string>
     <string name="title_activity_setup">Setup</string>
+    <string name="action_accept">Akzeptieren</string>
 
 </resources>

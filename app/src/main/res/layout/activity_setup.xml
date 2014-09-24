@@ -3,21 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <!-- not beautiful but works for now todo make beautiful-->
     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <Button
-            android:text="@string/ready"
-            android:layout_width="fill_parent"
-            android:layout_height="40px"
-            android:layout_gravity="top"
-            android:onClick="setupReady" />
-    </FrameLayout>
-
-
-    <FrameLayout
-        android:paddingTop="45px"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/fragment_container">

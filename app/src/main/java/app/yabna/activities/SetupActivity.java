@@ -33,11 +33,11 @@ public class SetupActivity extends Activity {
     }
 
     /**
-     * Called when user hits the 'ready' button. Will disable first start property and call
+     * Called when user hits the 'ok' button in the action bar. Will disable first start property and call
      * the overview activity to show the subscribed channels to the user.
-     * @param view
+     * @param item
      */
-    public void setupReady(View view) {
+    public void setupReady(MenuItem item) {
         SharedPreferences appPreferences = getApplicationContext()
                 .getSharedPreferences(getString(R.string.app_preferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = appPreferences.edit();
@@ -45,5 +45,11 @@ public class SetupActivity extends Activity {
         editor.commit();
 
         startActivity(new Intent(SetupActivity.this, OverviewActivity.class));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.setup_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
