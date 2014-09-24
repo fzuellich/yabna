@@ -15,6 +15,7 @@
     <string name="pref_subscribed_channels_file" translatable="false">app.yabna.subscribed_channels</string>
     <string name="pref_subscribed_channels_key" translatable="false">subscribed_channels</string>
     <string name="intent_channelDetailUrlExtra" translatable="false">channel_detail_url</string>
+    <string name="intent_channelDetailTitleExtra" translatable="false">channel_detail_title</string>
 
     <string name="app_preferences" translatable="false">app.yabna.preferences.app</string>
     <string name="app_preferences_first_start" translatable="false">first_start</string>

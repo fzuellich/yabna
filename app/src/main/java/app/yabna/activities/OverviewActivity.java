@@ -68,9 +68,13 @@ public class OverviewActivity extends ListActivity {
         // get url
         String url = subscribedChannelAdapter.getItem(position).getLink();
 
+        // get title
+        String title = subscribedChannelAdapter.getItem(position).getTitle();
+
         // create an intent and start detail activity to display stuff
         Intent intent = new Intent(OverviewActivity.this, ViewChannelActivity.class);
         intent.putExtra(getString(R.string.intent_channelDetailUrlExtra), url);
+        intent.putExtra(getString(R.string.intent_channelDetailTitleExtra), title);
         startActivity(intent);
     }
 
