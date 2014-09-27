@@ -16,17 +16,28 @@ import app.yabna.R;
 import app.yabna.utils.ChannelDAO;
 import app.yabna.utils.PreferenceHelper;
 
-
+/**
+ * Activity gives the user a general overview of all his subscribed channels.
+ */
 public class OverviewActivity extends ListActivity {
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
+    // adapter used to fill the ListView
     private ArrayAdapter<ChannelDAO> subscribedChannelAdapter;
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onResume() {
         super.onResume();
 
         // check if first start ...
-        if(isFirstStart()) {
+        if (isFirstStart()) {
             startActivity(new Intent(OverviewActivity.this, SetupActivity.class));
             finish();
         }
@@ -35,6 +46,13 @@ public class OverviewActivity extends ListActivity {
         loadChannels();
     }
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Logic
+    // /////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Load all subscribed channels from the preferences and add them to the ListView adapter.
+     */
     private void loadChannels() {
         // fetch subscribed channels
         List<ChannelDAO> subscribedChannels = PreferenceHelper
@@ -49,6 +67,11 @@ public class OverviewActivity extends ListActivity {
         setListAdapter(subscribedChannelAdapter);
     }
 
+    /**
+     * Check if this is the first start.
+     *
+     * @return
+     */
     private boolean isFirstStart() {
         boolean result = true;
 
@@ -64,10 +87,8 @@ public class OverviewActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        // get url
+        // get basic information
         String url = subscribedChannelAdapter.getItem(position).getLink();
-
-        // get title
         String title = subscribedChannelAdapter.getItem(position).getTitle();
 
         // create an intent and start detail activity to display stuff
@@ -77,9 +98,9 @@ public class OverviewActivity extends ListActivity {
         startActivity(intent);
     }
 
-    // //////////////////////////////////////
-    // Menu related stuff
-    // /////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Menu stuff
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

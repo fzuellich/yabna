@@ -19,14 +19,23 @@ import app.yabna.utils.ChannelDAO;
 import app.yabna.utils.PreferenceHelper;
 
 /**
+ * TODO: check if oncreate and onresume is mixed up
  * Fragment implementing main settings behaviour to subscribed/unsubscribe from channels.
  */
 public class SettingsFragment extends PreferenceFragment implements AsyncTaskFinishedListener {
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     private ProgressDialog progressDialog;
 
     // our list of checkbox preferences
     private List<CheckBoxPreference> preferences = new ArrayList<CheckBoxPreference>();
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,15 +70,20 @@ public class SettingsFragment extends PreferenceFragment implements AsyncTaskFin
     public void onPause() {
         super.onPause();
 
+        // save all subscribed channels
         List<String> saveThis = new ArrayList<String>();
-        for(CheckBoxPreference preference : preferences) {
-            if(preference.isChecked()) {
+        for (CheckBoxPreference preference : preferences) {
+            if (preference.isChecked()) {
                 saveThis.add(preference.getKey());
             }
         }
 
         PreferenceHelper.saveSubscribedChannelsAsString(saveThis, getActivity().getApplicationContext());
     }
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Logic
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void taskFinished(Object result) {
@@ -78,7 +92,7 @@ public class SettingsFragment extends PreferenceFragment implements AsyncTaskFin
 
         // add a new preference
         PreferenceCategory category = (PreferenceCategory) findPreference("pref_channel");
-        for(ChannelDAO channel : availableChannels) {
+        for (ChannelDAO channel : availableChannels) {
             CheckBoxPreference pref = new CheckBoxPreference(getActivity().getApplicationContext());
             pref.setTitle(channel.getTitle());
             pref.setKey(channel.getPreferenceString());

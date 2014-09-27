@@ -18,20 +18,41 @@ import app.yabna.utils.FileSystemHelper;
  */
 public class SaveReadListTask extends AsyncTask<Object, Void, Object> {
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     private final AsyncTaskFinishedListener finishedListener;
 
     private final Context context;
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    // /////////////////////////////////////////////////////////////////////////////////////
+
+    public SaveReadListTask(Context context) {
+        this.context = context;
+        this.finishedListener = new AsyncTaskFinishedListener() {
+            @Override
+            public void taskFinished(Object result) {
+            }
+        };
+    }
+
     /**
      * Create a new async task to save the list of read items to disk and call the listener when finished.
      *
-     * @param context context used to obtain internal storage file handle
+     * @param context          context used to obtain internal storage file handle
      * @param finishedListener listener will be called if finished. receives a ReadItemsList instance.
      */
     public SaveReadListTask(Context context, AsyncTaskFinishedListener finishedListener) {
         this.context = context;
         this.finishedListener = finishedListener;
     }
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Save the list.

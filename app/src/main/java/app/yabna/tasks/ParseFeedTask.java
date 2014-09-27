@@ -20,18 +20,30 @@ import app.yabna.utils.ReadItemsList;
  */
 public class ParseFeedTask extends AsyncTask<URL, Integer, FeedDAO> {
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     private final AsyncTaskFinishedListener listener;
     private final Context context;
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     public ParseFeedTask(AsyncTaskFinishedListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     protected FeedDAO doInBackground(URL... urls) {
         InputStream is = downloadFeed(urls[0]);
-        FeedDAO feed = new  FeedParser(is, urls[0].toExternalForm()).parseFeed();
+        FeedDAO feed = new FeedParser(is, urls[0].toExternalForm()).parseFeed();
 
         ReadItemsList readItems = new LoadReadListTask(context).doInBackground(feed);
         feed.setReadItems(readItems);
@@ -45,12 +57,15 @@ public class ParseFeedTask extends AsyncTask<URL, Integer, FeedDAO> {
         listener.taskFinished(feedDAO);
     }
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Logic
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * We could just create a more abstract function and use it in ChannelPreferenceTask and this one,
      * but what about performance?
      *
      * @param url feed url
-     *
      * @return stream containing file.
      */
     private InputStream downloadFeed(URL url) {

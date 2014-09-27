@@ -13,14 +13,21 @@ import app.yabna.R;
  */
 public class PreferenceHelper {
 
-    private static final String CHANNEL_DELEMITER = "µ";
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
+    private static final String CHANNEL_DELIMITER = "µ";
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Logic
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Read all subscribed channels from the shared properties and return them as string with the
      * format: title;link.
      *
      * @param context Context to fetch preferences and using the getString() method.
-     *
      * @return a list of subscribed channels as string
      */
     public static List<String> getSubscribedChannelsAsStrings(Context context) {
@@ -33,11 +40,11 @@ public class PreferenceHelper {
         // split up
         String[] channelsRaw = preferences
                 .getString(context.getString(R.string.pref_subscribed_channels_key), "")
-                .split(CHANNEL_DELEMITER);
+                .split(CHANNEL_DELIMITER);
 
         // parse all channels
-        for(String channel : channelsRaw) {
-            if(channel.isEmpty()) continue;
+        for (String channel : channelsRaw) {
+            if (channel.isEmpty()) continue;
             result.add(channel);
         }
 
@@ -48,17 +55,16 @@ public class PreferenceHelper {
      * Read all subscribed channels from the shared properties and return them as a dao.
      *
      * @param context Context to fetch preferences and using the getString() method.
-     *
      * @return list of daos
      */
     public static List<ChannelDAO> getSubscribedChannelsAsDAO(Context context) {
         // fetch subscribed channels raw
         List<String> raw = PreferenceHelper.getSubscribedChannelsAsStrings(context);
-        if(raw.size() == 0) return new ArrayList<ChannelDAO>(0);
+        if (raw.size() == 0) return new ArrayList<ChannelDAO>(0);
 
         // initialize with correct size and parse channels
         List<ChannelDAO> result = new ArrayList<ChannelDAO>(raw.size());
-        for(String rawChannel : raw) {
+        for (String rawChannel : raw) {
             result.add(ChannelDAO.parse(rawChannel));
         }
 
@@ -69,16 +75,16 @@ public class PreferenceHelper {
      * Save a list of strings as subscribed channels.
      *
      * @param subscribedChannels list of subscribed channels in form title:link
-     * @param context Context to fetch preferences and using the getString() method.
+     * @param context            Context to fetch preferences and using the getString() method.
      */
     public static void saveSubscribedChannelsAsString(List<String> subscribedChannels, Context context) {
         StringBuilder preferenceString = new StringBuilder();
-        for(String channel : subscribedChannels) {
-            preferenceString.append(channel + CHANNEL_DELEMITER);
+        for (String channel : subscribedChannels) {
+            preferenceString.append(channel + CHANNEL_DELIMITER);
         }
 
         // cut out last |
-        preferenceString.deleteCharAt(preferenceString.length()-1);
+        preferenceString.deleteCharAt(preferenceString.length() - 1);
 
         // save in SharedPreference
         SharedPreferences preferences = context

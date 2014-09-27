@@ -15,22 +15,34 @@ import app.yabna.utils.ChannelDAO;
 
 /**
  * Fetch a list of available channels.
- *
+ * <p/>
  * TODO: Add caching mechanism
  * TODO: Add dialog to notify user
  */
 public class ChannelPreferencesTask extends AsyncTask<URL, Integer, List<ChannelDAO>> {
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     private final AsyncTaskFinishedListener finishedListener;
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Create a new async task to load all channels and call the listener when finished.
+     *
      * @param finishedListener listener will be called if finished. receives a List<ChannelItemDAO>.
      */
     public ChannelPreferencesTask(AsyncTaskFinishedListener finishedListener) {
         this.finishedListener = finishedListener;
     }
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Fetch a csv file and get all available channels.
@@ -43,8 +55,19 @@ public class ChannelPreferencesTask extends AsyncTask<URL, Integer, List<Channel
         return fetchChannelCSV(urls[0]);
     }
 
+    @Override
+    protected void onPostExecute(List<ChannelDAO> channels) {
+        super.onPostExecute(channels);
+        finishedListener.taskFinished(channels);
+    }
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Logic
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Fetch a csv from the given url and build a list containing all channels with their url.
+     *
      * @param url for csv
      * @return
      */
@@ -70,9 +93,4 @@ public class ChannelPreferencesTask extends AsyncTask<URL, Integer, List<Channel
         return new ArrayList<ChannelDAO>(0);
     }
 
-    @Override
-    protected void onPostExecute(List<ChannelDAO> channels) {
-        super.onPostExecute(channels);
-        finishedListener.taskFinished(channels);
-    }
 }

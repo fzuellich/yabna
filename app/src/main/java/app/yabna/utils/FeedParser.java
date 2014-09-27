@@ -13,15 +13,23 @@ import java.util.List;
 /**
  * Parser to extract useful information from a feed. Mainly following the developer.android.com tutorial
  * here.
- *
+ * <p/>
  * TODO close stream. but without throwing around all the ioexceptions
  */
 public class FeedParser {
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     // file content of the feed to parse.
     private final InputStream inputStream;
 
     private final String url;
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Constructors
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * @param stream feed as an input stream.
@@ -30,6 +38,10 @@ public class FeedParser {
         this.inputStream = stream;
         this.url = url;
     }
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Logic
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     public FeedDAO parseFeed() {
         FeedDAO result = new FeedDAO();
@@ -41,9 +53,9 @@ public class FeedParser {
             parser.nextTag();
 
             //parser.require(XmlPullParser.START_TAG, null, "rss");
-            while(parser.next() != XmlPullParser.END_DOCUMENT) {
+            while (parser.next() != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
-                if(name != null && name.equals("channel") && parser.getEventType() != XmlPullParser.END_TAG) {
+                if (name != null && name.equals("channel") && parser.getEventType() != XmlPullParser.END_TAG) {
                     result = parseChannel(parser);
                 }
             }
@@ -60,8 +72,7 @@ public class FeedParser {
      * Parse a feed (and all its items...).
      *
      * @param parser
-     *
-     * @return  the feed encapsulated in a dao.
+     * @return the feed encapsulated in a dao.
      */
     private FeedDAO parseChannel(XmlPullParser parser) throws IOException, XmlPullParserException {
         String title = "";
@@ -69,9 +80,9 @@ public class FeedParser {
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             String name = parser.getName();
-            if(name != null && name.equals("item") ) {
+            if (name != null && name.equals("item")) {
                 items.add(parseItem(parser));
-            } else if(name != null && name.equals("title")) {
+            } else if (name != null && name.equals("title")) {
                 title = extractText(parser);
             }
         }
@@ -82,9 +93,7 @@ public class FeedParser {
      * Parse an item.
      *
      * @param parser to use
-     *
      * @return a item encapsulated in an dao.
-     *
      * @throws XmlPullParserException
      * @throws IOException
      */
@@ -92,21 +101,21 @@ public class FeedParser {
         String link = "";
         String title = "";
 
-        while(parser.next() != XmlPullParser.END_DOCUMENT) {
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
             String tagName = parser.getName();
-            if(tagName == null) {
+            if (tagName == null) {
                 continue;
             }
 
-            if(tagName.equals("title")) {
+            if (tagName.equals("title")) {
                 title = extractText(parser);
-            } else if(tagName.equals("link")) {
+            } else if (tagName.equals("link")) {
                 link = extractText(parser);
             } else {
                 continue;
             }
 
-            if(link != null && !link.equals("") && title != null && !title.equals("")) break;
+            if (link != null && !link.equals("") && title != null && !title.equals("")) break;
         }
 
         return new FeedItemDAO(title, link);
@@ -114,7 +123,7 @@ public class FeedParser {
 
     private String extractText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
-        if(parser.next() == XmlPullParser.TEXT) {
+        if (parser.next() == XmlPullParser.TEXT) {
             result = parser.getText();
             parser.nextTag();
         }

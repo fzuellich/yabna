@@ -19,11 +19,19 @@ import app.yabna.utils.ReadItemsList;
  */
 public class LoadReadListTask extends AsyncTask<FeedDAO, Void, ReadItemsList> {
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     // async listener to call when finished
     private final AsyncTaskFinishedListener finishedListener;
 
     // context used to get a new file in the internal storage
     private final Context context;
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Create a new instance without an async listener. Maybe used if you just wanna call the
@@ -45,18 +53,21 @@ public class LoadReadListTask extends AsyncTask<FeedDAO, Void, ReadItemsList> {
      * Create a new instance with an async listener.
      *
      * @param finishedListener listener to be notified when finished.
-     * @param context ApplicationContext instance to get a file handle in the internal storage.
+     * @param context          ApplicationContext instance to get a file handle in the internal storage.
      */
     public LoadReadListTask(AsyncTaskFinishedListener finishedListener, Context context) {
         this.finishedListener = finishedListener;
         this.context = context;
     }
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Reads the list for the given feed from the disk.
      *
      * @param feedDAOs feed to load data for.
-     *
      * @return ReadItemsList instance. Maybe empty if file not found.
      */
     @Override

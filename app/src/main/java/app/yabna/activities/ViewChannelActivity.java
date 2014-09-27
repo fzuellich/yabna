@@ -20,18 +20,31 @@ import app.yabna.tasks.SaveReadListTask;
 import app.yabna.utils.AsyncTaskFinishedListener;
 import app.yabna.utils.FeedDAO;
 import app.yabna.utils.FeedItemDAO;
-import app.yabna.utils.FileSystemHelper;
 
 /**
- * List all news items of a channel
+ * TODO: check if onresume and oncreate is mixed up
+ * Activity will list all items found for a given channel. The channel to be displayed is controlled
+ * by an Intent. There is an extra (R.string.intent_channelDetailUrlExtra) to define the url to call
+ * and an extra to define the activities title (R.string.intent_channelDetailTitleExtra).
  */
 public class ViewChannelActivity extends ListActivity implements AsyncTaskFinishedListener {
 
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Variables
+    // /////////////////////////////////////////////////////////////////////////////////////
+
+    // feed instance loaded by this activity
     private FeedDAO feed;
 
+    // progress dialog indicating download progress
     private ProgressDialog progressDialog;
 
+    // adapter used to display feed entries
     private ArrayAdapter<FeedItemDAO> myAdapter;
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Lifecycle methods
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +53,11 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
         // display "< | Title ..."
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // retrieve the title for the activity from the intent
         String title = getIntent().getStringExtra(getString(R.string.intent_channelDetailTitleExtra));
         setTitle(title);
 
+        // parse the feed
         try {
             String feedUrl = getIntent().getStringExtra(getString(R.string.intent_channelDetailUrlExtra));
 
@@ -74,35 +89,22 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
     @Override
     protected void onPause() {
         super.onPause();
-        new SaveReadListTask(getApplicationContext(), new AsyncTaskFinishedListener() {
-            @Override
-            public void taskFinished(Object result) {
-                System.out.println("Saved read items...");
-            }
-        }).execute(new Object[]{feed.getUrl(), feed.getReadItems()});
+
+        // save the read items list
+        new SaveReadListTask(getApplicationContext())
+                .execute(new Object[]{feed.getUrl(), feed.getReadItems()});
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Activity logic
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void taskFinished(Object result) {
         feed = (FeedDAO) result;
 
         System.out.println("Loading finished.");
-        for(FeedItemDAO item : feed.getItems()) {
+        for (FeedItemDAO item : feed.getItems()) {
             System.out.println(item.getTitle() + " -> " + feed.getReadItems().isItemRead(item));
         }
 
@@ -127,5 +129,23 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
         Uri itemUrl = Uri.parse(feedItem.getLink());
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, itemUrl);
         startActivity(browserIntent);
+    }
+
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // Menu stuff
+    // /////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

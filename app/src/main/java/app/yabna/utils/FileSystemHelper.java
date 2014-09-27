@@ -1,7 +1,5 @@
 package app.yabna.utils;
 
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -14,7 +12,6 @@ public class FileSystemHelper {
      * Creates a new md5 hash to be used as filename. todo nice error handling
      *
      * @param input input for the hashing algorithm.
-     *
      * @return filename
      */
     public static String createFileNameFromURI(String input) throws NoSuchAlgorithmException {
