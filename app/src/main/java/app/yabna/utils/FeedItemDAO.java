@@ -1,9 +1,11 @@
 package app.yabna.utils;
 
+import java.io.Serializable;
+
 /**
  * Encapsulating a feed item.
  */
-public class FeedItemDAO {
+public class FeedItemDAO implements Serializable {
     private String title;
     private String link;
 

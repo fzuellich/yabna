@@ -2,24 +2,15 @@ package app.yabna.fragements;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channel;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import app.yabna.R;
 import app.yabna.tasks.ChannelPreferencesTask;

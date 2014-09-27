@@ -3,7 +3,6 @@ package app.yabna.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 

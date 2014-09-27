@@ -21,11 +21,14 @@ public class FeedParser {
     // file content of the feed to parse.
     private final InputStream inputStream;
 
+    private final String url;
+
     /**
      * @param stream feed as an input stream.
      */
-    public FeedParser(InputStream stream) {
+    public FeedParser(InputStream stream, String url) {
         this.inputStream = stream;
+        this.url = url;
     }
 
     public FeedDAO parseFeed() {
@@ -72,7 +75,7 @@ public class FeedParser {
                 title = extractText(parser);
             }
         }
-        return new FeedDAO(title, items);
+        return new FeedDAO(url, title, items);
     }
 
     /**

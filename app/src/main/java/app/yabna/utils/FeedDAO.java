@@ -1,5 +1,6 @@
 package app.yabna.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,14 +10,33 @@ public class FeedDAO {
 
     private String feedTitle;
 
+    private String url;
+
     private List<FeedItemDAO> items;
 
+    private ReadItemsList readItems;
+
     public FeedDAO() {
+        this.url = "";
+        this.feedTitle = "";
+        this.items = new ArrayList<FeedItemDAO>();
+        this.readItems = new ReadItemsList();
     }
 
-    public FeedDAO(String title, List<FeedItemDAO> items) {
+    public FeedDAO(String url, String title, List<FeedItemDAO> items) {
+        this.url = url;
         this.feedTitle = title;
         this.items = items;
+
+        this.readItems = new ReadItemsList(this);
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public List<FeedItemDAO> getItems() {
@@ -33,6 +53,14 @@ public class FeedDAO {
 
     public void setFeedTitle(String feedTitle) {
         this.feedTitle = feedTitle;
+    }
+
+    public ReadItemsList getReadItems() {
+        return readItems;
+    }
+
+    public void setReadItems(ReadItemsList readItems) {
+        this.readItems = readItems;
     }
 
     @Override

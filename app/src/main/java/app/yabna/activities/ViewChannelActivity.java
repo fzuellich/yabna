@@ -16,14 +16,18 @@ import java.net.URL;
 
 import app.yabna.R;
 import app.yabna.tasks.ParseFeedTask;
+import app.yabna.tasks.SaveReadListTask;
 import app.yabna.utils.AsyncTaskFinishedListener;
 import app.yabna.utils.FeedDAO;
 import app.yabna.utils.FeedItemDAO;
+import app.yabna.utils.FileSystemHelper;
 
 /**
  * List all news items of a channel
  */
 public class ViewChannelActivity extends ListActivity implements AsyncTaskFinishedListener {
+
+    private FeedDAO feed;
 
     private ProgressDialog progressDialog;
 
@@ -48,9 +52,8 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
             progressDialog.setMessage(getString(R.string.dialog_msg_fetching_data));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-
             // execute task. check callback function below.
-            new ParseFeedTask(this).execute(new URL(feedUrl));
+            new ParseFeedTask(this, getApplicationContext()).execute(new URL(feedUrl));
 
             // create adapter and use base list item
             myAdapter = new ArrayAdapter<FeedItemDAO>(getApplicationContext(), android.R.layout.simple_list_item_1);
@@ -66,6 +69,17 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
     protected void onResume() {
         super.onResume();
         progressDialog.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        new SaveReadListTask(getApplicationContext(), new AsyncTaskFinishedListener() {
+            @Override
+            public void taskFinished(Object result) {
+                System.out.println("Saved read items...");
+            }
+        }).execute(new Object[]{feed.getUrl(), feed.getReadItems()});
     }
 
     @Override
@@ -85,7 +99,12 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
 
     @Override
     public void taskFinished(Object result) {
-        FeedDAO feed = (FeedDAO) result;
+        feed = (FeedDAO) result;
+
+        System.out.println("Loading finished.");
+        for(FeedItemDAO item : feed.getItems()) {
+            System.out.println(item.getTitle() + " -> " + feed.getReadItems().isItemRead(item));
+        }
 
         // fill adapter
         myAdapter.addAll(feed.getItems());
@@ -100,6 +119,9 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
 
         // feed item
         FeedItemDAO feedItem = (FeedItemDAO) l.getAdapter().getItem(position);
+
+        // mark read
+        feed.getReadItems().markItemAsRead(feedItem);
 
         // open a browser
         Uri itemUrl = Uri.parse(feedItem.getLink());
