@@ -81,7 +81,10 @@ public class FeedParser {
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             String name = parser.getName();
             if (name != null && name.equals("item")) {
-                items.add(parseItem(parser));
+                FeedItemDAO parsedItem = parseItem(parser);
+                if(!parsedItem.getTitle().isEmpty() || !parsedItem.getLink().isEmpty()) {
+                    items.add(parsedItem);
+                }
             } else if (name != null && name.equals("title")) {
                 title = extractText(parser);
             }
