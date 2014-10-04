@@ -18,6 +18,7 @@ import app.yabna.R;
 import app.yabna.tasks.ParseFeedTask;
 import app.yabna.tasks.SaveReadListTask;
 import app.yabna.utils.AsyncTaskFinishedListener;
+import app.yabna.utils.ChannelListViewAdapter;
 import app.yabna.utils.FeedDAO;
 import app.yabna.utils.FeedItemDAO;
 
@@ -69,21 +70,16 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
 
             // execute task. check callback function below.
             new ParseFeedTask(this, getApplicationContext()).execute(new URL(feedUrl));
-
-            // create adapter and use base list item
-            myAdapter = new ArrayAdapter<FeedItemDAO>(getApplicationContext(), android.R.layout.simple_list_item_1);
-
-            // set adapter as main source
-            setListAdapter(myAdapter);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
+        progressDialog.show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        progressDialog.show();
     }
 
     @Override
@@ -108,8 +104,13 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
             System.out.println(item.getTitle() + " -> " + feed.getReadItems().isItemRead(item));
         }
 
-        // fill adapter
+
+        // create custom adapter
+        myAdapter = new ChannelListViewAdapter(getApplicationContext(), feed.getReadItems());
         myAdapter.addAll(feed.getItems());
+
+        // set adapter as main source
+        setListAdapter(myAdapter);
 
         // dismiss dialog
         progressDialog.dismiss();
@@ -124,6 +125,7 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
 
         // mark read
         feed.getReadItems().markItemAsRead(feedItem);
+        myAdapter.notifyDataSetChanged();
 
         // open a browser
         Uri itemUrl = Uri.parse(feedItem.getLink());

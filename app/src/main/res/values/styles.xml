@@ -4,5 +4,7 @@
     <style name="AppTheme" parent="Theme.Base">
         <!-- Customize your theme here. -->
     </style>
-
+    <dimen name="paddingStart">6dip</dimen>
+    <dimen name="paddingEnd">6dip</dimen>
+    <dimen name="listItemMinHeight">48dip</dimen>
 </resources>
