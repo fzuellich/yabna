@@ -99,12 +99,6 @@ public class ViewChannelActivity extends ListActivity implements AsyncTaskFinish
     public void taskFinished(Object result) {
         feed = (FeedDAO) result;
 
-        System.out.println("Loading finished.");
-        for (FeedItemDAO item : feed.getItems()) {
-            System.out.println(item.getTitle() + " -> " + feed.getReadItems().isItemRead(item));
-        }
-
-
         // create custom adapter
         myAdapter = new ChannelListViewAdapter(getApplicationContext(), feed.getReadItems());
         myAdapter.addAll(feed.getItems());
